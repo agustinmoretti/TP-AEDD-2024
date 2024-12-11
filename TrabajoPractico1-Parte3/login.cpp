@@ -1,6 +1,8 @@
 #include<windows.h>
 #include<iostream>
 //INCLUIR ARCHIVOS CABECERA ACA
+#include"menu.h"
+#include"submenu_gen_competencia.h"
 #include"login.h"
 #include"visual.h"
 
@@ -31,7 +33,7 @@ int passwordgenerada(int user)
 	int year = 2024;             // Año actual
 	return (year * capicua) + ultimosTres; // Fórmula para generar la contraseña
 }
-bool login(){
+bool login(archivoCompetencia & file_competencia){
 	
 	int user,passwordUser;
 	bool correcto1 = false,ret = false;
@@ -52,6 +54,7 @@ bool login(){
 		correcto1 = (user >= 10000 && user <= 99999);
 		
 	}while(!correcto1);
+	file_competencia.legajo=user;
 	
 	cout << "-----------------------------------" << endl;
 	

@@ -5,5 +5,5 @@
 using namespace std;
 bool esCapicua(int num);
 int passwordgenerada(int user);
-bool login();
+bool login(archivoCompetencia & file_competencia);
 #endif

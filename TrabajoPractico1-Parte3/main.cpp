@@ -1,27 +1,22 @@
 #include<iostream>
 //INCLUIR ARCHIVOS CABECERA ACA 
+#include"deportes.h"
 #include"menu.h"
 #include"bienvenida.h"
 #include"login.h"
-#include"deportes.h"
 #include"paises.h"
 #include"mostrar_medallero.h"
 #include"cargar_medallas.h"
 #include"gen_competencia.h"
+#include"submenu_gen_competencia.h"
 #include"visual.h"
-
-int  deporte_medallas[totalDeportes][3];
-competidores competencia[totalDeportes];
 
 using namespace std;
 
 int main (int argc, char *argv[]) {
-	
-	for(int i=0;i<totalDeportes;i++){
-		for(int j=0;j<3;j++){
-			deporte_medallas[i][j]=0;
-		}
-	}
+	competidores competencia[totalDeportes];
+	int deporte_medallas[totalDeportes][3];
+	archivoCompetencia file_competencia;
 	
 	//bienvenida
 	bienvenida();
@@ -29,10 +24,10 @@ int main (int argc, char *argv[]) {
 	
 	//iniciar sesion
 	system("COLOR 87");
-	if(login()){
+	if(login(file_competencia)){
 		//menu principal
 		system("cls");
-		menuPrincipal();
+		menuPrincipal(competencia, deporte_medallas, file_competencia);
 	}
 	else {
 		cout<<"Limite de ingresos erroneos alcanzado. Por favor, reinicie el programa para reintentar."<<endl;

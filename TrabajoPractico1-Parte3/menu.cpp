@@ -1,21 +1,33 @@
 //BIBLIOTECAS ESTANDAR C++
 #include<iostream>
+#include<windows.h>
+#include<fstream>
 
 using namespace std;
 //INCLUIR CABECERAS ACA
+#include"menu.h"
 #include"deportes.h"
 #include"paises.h"
 #include"gen_competencia.h"
-#include"submenu_gen_competencia.h"
 #include"cargar_medallas.h"
 #include"visual.h"
 #include"mostrar_medallero.h"
-#include<windows.h>
 
-void menuPrincipal() {
+bool todosCero(int deporte_medallas[][3]){
+	for(int i=0; i<87; i++){
+		for(int j=0; j<3; j++){
+			if(deporte_medallas[i][j] != 0){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+void menuPrincipal(competidores competencia[], int deporte_medallas[][3], archivoCompetencia &file_competencia) {
 	char opcion, opSalida;             // Para capturar la opción del usuario
 	bool competenciaGenerada = false; // Bandera para saber si la competencia ha sido generada
-	bool medallasCargadas = false;    // Bandera para saber si las medallas han sido cargadas correctamente
+	bool medallasIngresadas = false;    // Bandera para saber si las medallas han sido cargadas correctamente
+	bool medallasCargadas = true; //Bandera para saber si al cargar una competencia, esta tiene cargada medallas o no
 	
 	do {
 		// Mostrar el menú principal
@@ -33,7 +45,7 @@ void menuPrincipal() {
 		// Procesar la opción ingresada
 		switch (opcion) {
 		case '1':
-			competenciaGenerada = submenuCompetencia();
+			competenciaGenerada = submenuCompetencia(competencia, deporte_medallas, file_competencia);
 			Sleep(1000);
 			system("cls");
 			
@@ -41,8 +53,8 @@ void menuPrincipal() {
 			
 		case '2':{
 			if (competenciaGenerada) {
-				medallasCargadas = cargar_medallas();
-				if (medallasCargadas) {
+				medallasIngresadas = cargar_medallas(competencia, deporte_medallas, file_competencia);
+				if (medallasIngresadas) {
 					cout << "Medallas cargadas correctamente." << endl;
 					Sleep(1000);
 					system("cls");
@@ -61,13 +73,14 @@ void menuPrincipal() {
 			break;
 			
 		case '3':{
-			if (competenciaGenerada && medallasCargadas) {
-				mostrarmedallas();
+			medallasCargadas = todosCero(deporte_medallas);
+			if (competenciaGenerada && (medallasIngresadas || !medallasCargadas)) {
+				mostrarmedallas(deporte_medallas);
 			} else if (!competenciaGenerada) {
 				cout << "Primero debe generar la competencia antes de mostrar el medallero." << endl;
 				Sleep(2000);
 				system("cls");
-			} else if (!medallasCargadas) {
+			} else if (!medallasIngresadas || medallasCargadas) {
 				cout << "Primero debe cargar las medallas antes de mostrar el medallero." << endl;
 				Sleep(2000);
 				system("cls");
@@ -90,9 +103,27 @@ void menuPrincipal() {
 			system("cls");
 			
 			if(opSalida=='s'){
+				char nombreArchivo[30];
+				strftime(nombreArchivo, sizeof(nombreArchivo), "%Y-%m-%d-%H-%M-%S.bin", &file_competencia.fechaCreacion);
+				
+				//Reescribe competencia y guarda las medallas cargadas en los procesos anteriores en el archivo.bin con en nombre pedido
+				ofstream archivo(nombreArchivo, ios::binary | ios::out | ios::trunc);
+				if (archivo) {
+					archivo.write(reinterpret_cast<char*>(&file_competencia), sizeof(file_competencia));
+					archivo.close();
+					cout << "Archivo sobrescrito exitosamente: " << nombreArchivo << endl;
+					Sleep(2000);
+					system("cls");
+				} else {
+					cout << "Error al sobrescribir el archivo." << endl;
+					Sleep(2000);
+					system("cls");
+				}
+				
 				cout << "Saliendo de la aplicacion..." << endl;
 				break;
-			}else{
+			}else if(opSalida=='n'){
+				opSalida='0';
 				break;
 			}
 			

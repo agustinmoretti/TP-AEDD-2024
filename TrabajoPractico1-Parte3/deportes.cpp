@@ -131,3 +131,24 @@ void mostrarDeportesColectivos() {
 		Sleep(100);
 	}
 }
+bool verificaIndividuales(int id){
+	bool encon=false;
+	for (int j = 0; j < deportesIndividuales; j++){
+		if (id == indicesIndividuales[j]){
+			encon = true;
+		}
+	}
+	return encon;
+}
+bool verificaColectivos(int id){
+	bool encon=false;
+	for (int j = 0; j < deportesColectivos; j++){
+		if (id == indicesColectivos[j]){
+			encon = true;
+		}
+	}
+	return encon;
+}
+bool deporteCargado(int id, int deporte_medallas[][3]){//funcion que se encarga de verificar si un deporte ya fue cargado
+	return deporte_medallas[id-1][0] != 0 || deporte_medallas[id-1][1] != 0 || deporte_medallas[id-1][2] != 0;
+}

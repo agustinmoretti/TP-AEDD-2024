@@ -1,29 +1,16 @@
 #include<iostream>
 #include<windows.h>
-#include<fstream>
 using namespace std;
 //INCLUIR ARCHIVOS CABECERA ACA
+#include"menu.h"
 #include"cargar_medallas.h"
 #include"deportes.h"
 #include"paises.h"
 #include"gen_competencia.h"
-#include"submenu_gen_competencia.h"
 #include"visual.h"
 
-bool deporteCargado(int id){//funcion que se encarga de verificar si un deporte ya fue cargado
-	return deporte_medallas[id][0] != 0 || deporte_medallas[id][1] != 0 || deporte_medallas[id][2] != 0;
-}
 
-bool paisRecibioMedalla(int id, int idPais){//
-	for (int j = 0; j < 3; j++) {
-		if (deporte_medallas[id][j] == idPais){
-			return true;
-		}
-	}
-	return false;
-}
-
-void cargaPorDeporteIndividual(){
+void cargaPorDeporteIndividual(competidores competencia[], int deporte_medallas[][3], archivoCompetencia &file_competencia){
 	// Carga inicial de datos
 	cout<< "Cargando listado Deportes Individuales" <<endl;
 	Sleep(1000);
@@ -42,22 +29,17 @@ void cargaPorDeporteIndividual(){
 		system("cls");
 		
 		// Verificar si el ID está en los deportes individuales
-		for (int j = 0; j < 53; j++){
-			if (id == indicesIndividuales[j]){
-				encon = true;
-				break;
-			}
-		}
+		encon = verificaIndividuales(id);
 		
 		if (encon){
 			// Validar si ya fue cargado
-			if (deporteCargado(id)){
+			if (deporteCargado(id, deporte_medallas)){
 				cout << "El deporte ya tiene medallas asignadas. No se puede cargar nuevamente." << endl;
 				continue;
 			}
 			
 			cout<< "Listado de países participantes:" <<endl;
-			imprimircompetencia(id);
+			imprimircompetencia(id, competencia);
 			
 			cout<<"Ingrese -1 para cancelar la carga de medallas."<<endl;
 			cout<<endl;
@@ -68,18 +50,23 @@ void cargaPorDeporteIndividual(){
 				cin>>idPais1;
 				if(idPais1 == -1){
 					for(int i=0;i<3;i++){
-						deporte_medallas[id][i] = 0;
-						file_competencia.deporte_medallas[id][i] = 0;
+						deporte_medallas[id-1][i] = 0;
+						file_competencia.deporte_medallas[id-1][i] = 0;
 					}
 					cout<< "Carga de medallas cancelada." <<endl;
 					return;
 				}else{
-					if (!paisRecibioMedalla(id, idPais1)){
-						deporte_medallas[id][0] = idPais1;
-						file_competencia.deporte_medallas[id][0]=deporte_medallas[id][0];
-						var1 = true;
-					}else{
-						cout << "ID de país inválido o repetido." << endl;
+					for(int a = 0; a < 16; a++){
+						if (idPais1 == competencia[id-1].paises[a]){
+							deporte_medallas[id-1][0] = idPais1;
+							file_competencia.deporte_medallas[id-1][0]=deporte_medallas[id-1][0];
+							var1 = true;
+							break;
+						}
+					}
+					if (!var1) {
+						cout << "ID de pais erroneo o medallero repetido" << endl;
+						Sleep(700); // Pausa después de un mensaje de error
 					}
 				}
 			}while (!var1);
@@ -90,18 +77,23 @@ void cargaPorDeporteIndividual(){
 				cin>>idPais2;
 				if(idPais2 == -1){
 					for(int i=0;i<3;i++){
-						deporte_medallas[id][i] = 0;
-						file_competencia.deporte_medallas[id][i] = 0;
+						deporte_medallas[id-1][i] = 0;
+						file_competencia.deporte_medallas[id-1][i] = 0;
 					}
 					cout<< "Carga de medallas cancelada." <<endl;
 					return;
 				}else{
-					if (!paisRecibioMedalla(id, idPais2)){
-						deporte_medallas[id][1] = idPais2;
-						file_competencia.deporte_medallas[id][1]=deporte_medallas[id][1];
-						var2 = true;
-					}else{
-						cout << "ID de país inválido o repetido." << endl;
+					for(int a = 0; a < 16; a++){
+						if (idPais2 == competencia[id-1].paises[a]){
+							deporte_medallas[id-1][1] = idPais2;
+							file_competencia.deporte_medallas[id-1][1]=deporte_medallas[id-1][1];
+							var2 = true;
+							break;
+						}
+					}
+					if (!var2) {
+						cout << "ID de pais erroneo o medallero repetido" << endl;
+						Sleep(700); // Pausa después de un mensaje de error
 					}
 				}
 			}while (!var2);
@@ -112,18 +104,23 @@ void cargaPorDeporteIndividual(){
 				cin>>idPais3;
 				if(idPais3 == -1){
 					for(int i=0;i<3;i++){
-						deporte_medallas[id][i] = 0;
-						file_competencia.deporte_medallas[id][i] = 0;
+						deporte_medallas[id-1][i] = 0;
+						file_competencia.deporte_medallas[id-1][i] = 0;
 					}
 					cout<< "Carga de medallas cancelada." <<endl;
 					return;
 				}else{
-					if (!paisRecibioMedalla(id, idPais3)){
-						deporte_medallas[id][2] = idPais3;
-						file_competencia.deporte_medallas[id][2]=deporte_medallas[id][2];
-						var3 = true;
-					}else{
-						cout << "ID de país inválido o repetido." << endl;
+					for(int a = 0; a < 16; a++){
+						if (idPais3 == competencia[id-1].paises[a]){
+							deporte_medallas[id-1][2] = idPais3;
+							file_competencia.deporte_medallas[id-1][2]=deporte_medallas[id-1][2];
+							var3 = true;
+							break;
+						}
+					}
+					if (!var3) {
+						cout << "ID de pais erroneo o medallero repetido" << endl;
+						Sleep(700); // Pausa después de un mensaje de error
 					}
 				}
 			}while (!var3);
@@ -131,7 +128,7 @@ void cargaPorDeporteIndividual(){
 			// MUESTRO LOS DEPORTES CARGADOS
 			cout<< "\nMedallas Cargadas: ";
 			for (int i = 0; i < 3; i++){
-				cout<<deporte_medallas[id][i]<<(i < 2 ? ", " : " ");
+				cout<<deporte_medallas[id-1][i]<<(i < 2 ? ", " : " ");
 			}
 			cout<<endl;
 			Sleep(2000);
@@ -142,7 +139,7 @@ void cargaPorDeporteIndividual(){
 }
 
 // Función para cargar deportes colectivos
-void cargaPorDeporteColectivo(){
+void cargaPorDeporteColectivo(competidores competencia[], int deporte_medallas[][3], archivoCompetencia &file_competencia){
 	// Carga inicial de datos
 	cout<< "Cargando listado Deportes Colectivos" <<endl;
 	Sleep(1000);
@@ -161,22 +158,17 @@ void cargaPorDeporteColectivo(){
 		system("cls");
 		
 		// Verificar si el ID está en los deportes colectivos
-		for (int j = 0; j < 53; j++){
-			if (id == indicesColectivos[j]){
-				encon = true;
-				break;
-			}
-		}
+		encon = verificaColectivos(id);
 		
 		if (encon){
 			// Validar si ya fue cargado
-			if (deporteCargado(id)){
+			if (deporteCargado(id, deporte_medallas)){
 				cout << "El deporte ya tiene medallas asignadas. No se puede cargar nuevamente." << endl;
 				continue;
 			}
 			
 			cout<< "Listado de países participantes:" <<endl;
-			imprimircompetencia(id);
+			imprimircompetencia(id, competencia);
 			
 			cout<<"Ingrese -1 para cancelar la carga de medallas."<<endl;
 			cout<<endl;
@@ -187,18 +179,23 @@ void cargaPorDeporteColectivo(){
 				cin>>idPais1;
 				if(idPais1 == -1){
 					for(int i=0;i<3;i++){
-						deporte_medallas[id][i] = 0;
-						file_competencia.deporte_medallas[id][i] = 0;
+						deporte_medallas[id-1][i] = 0;
+						file_competencia.deporte_medallas[id-1][i] = 0;
 					}
 					cout<< "Carga de medallas cancelada." <<endl;
 					return;
 				}else{
-					if (!paisRecibioMedalla(id, idPais1)){
-						deporte_medallas[id][0] = idPais1;
-						file_competencia.deporte_medallas[id][0]=deporte_medallas[id][0];
-						var1 = true;
-					}else{
-						cout << "ID de país inválido o repetido." << endl;
+					for(int a = 0; a < 16; a++){
+						if (idPais1 == competencia[id-1].paises[a]){
+							deporte_medallas[id-1][0] = idPais1;
+							file_competencia.deporte_medallas[id-1][0]=deporte_medallas[id-1][0];
+							var1 = true;
+							break;
+						}
+					}
+					if (!var1) {
+						cout << "ID de pais erroneo o medallero repetido" << endl;
+						Sleep(700); // Pausa después de un mensaje de error
 					}
 				}
 			}while (!var1);
@@ -209,18 +206,23 @@ void cargaPorDeporteColectivo(){
 				cin>>idPais2;
 				if(idPais2 == -1){
 					for(int i=0;i<3;i++){
-						deporte_medallas[id][i] = 0;
-						file_competencia.deporte_medallas[id][i] = 0;
+						deporte_medallas[id-1][i] = 0;
+						file_competencia.deporte_medallas[id-1][i] = 0;
 					}
 					cout<< "Carga de medallas cancelada." <<endl;
 					return;
 				}else{
-					if (!paisRecibioMedalla(id, idPais2)){
-						deporte_medallas[id][1] = idPais2;
-						file_competencia.deporte_medallas[id][1]=deporte_medallas[id][1];
-						var2 = true;
-					}else{
-						cout << "ID de país inválido o repetido." << endl;
+					for(int a = 0; a < 16; a++){
+						if (idPais2 == competencia[id-1].paises[a]){
+							deporte_medallas[id-1][1] = idPais2;
+							file_competencia.deporte_medallas[id-1][1]=deporte_medallas[id-1][1];
+							var2 = true;
+							break;
+						}
+					}
+					if (!var2) {
+						cout << "ID de pais erroneo o medallero repetido" << endl;
+						Sleep(700); // Pausa después de un mensaje de error
 					}
 				}
 			}while (!var2);
@@ -231,18 +233,23 @@ void cargaPorDeporteColectivo(){
 				cin>>idPais3;
 				if(idPais3 == -1){
 					for(int i=0;i<3;i++){
-						deporte_medallas[id][i] = 0;
-						file_competencia.deporte_medallas[id][i] = 0;
+						deporte_medallas[id-1][i] = 0;
+						file_competencia.deporte_medallas[id-1][i] = 0;
 					}
 					cout<< "Carga de medallas cancelada." <<endl;
 					return;
 				}else{
-					if (!paisRecibioMedalla(id, idPais3)){
-						deporte_medallas[id][2] = idPais3;
-						file_competencia.deporte_medallas[id][2]=deporte_medallas[id][2];
-						var3 = true;
-					}else{
-						cout << "ID de país inválido o repetido." << endl;
+					for(int a = 0; a < 16; a++){
+						if (idPais3 == competencia[id-1].paises[a]){
+							deporte_medallas[id-1][2] = idPais3;
+							file_competencia.deporte_medallas[id-1][2]=deporte_medallas[id-1][2];
+							var3 = true;
+							break;
+						}
+					}
+					if (!var3) {
+						cout << "ID de pais erroneo o medallero repetido" << endl;
+						Sleep(700); // Pausa después de un mensaje de error
 					}
 				}
 			}while (!var3);
@@ -250,7 +257,7 @@ void cargaPorDeporteColectivo(){
 			// MUESTRO LOS DEPORTES CARGADOS
 			cout<< "\nMedallas Cargadas: ";
 			for (int i = 0; i < 3; i++){
-				cout<<deporte_medallas[id][i]<<(i < 2 ? ", " : " ");
+				cout<<deporte_medallas[id-1][i]<<(i < 2 ? ", " : " ");
 			}
 			cout<<endl;
 			Sleep(2000);
@@ -260,7 +267,7 @@ void cargaPorDeporteColectivo(){
 	}while (!encon);
 }	
 	
-bool cargar_medallas(){
+bool cargar_medallas(competidores competencia[], int deporte_medallas[][3], archivoCompetencia &file_competencia){
 	char opcion;
 	
 	bool cargaExitosa = false;
@@ -281,52 +288,18 @@ bool cargar_medallas(){
 		
 		switch (opcion) {
 		case '1':{
-			cargaPorDeporteIndividual();
+			cargaPorDeporteIndividual(competencia, deporte_medallas, file_competencia);
 			cargaExitosa = true;
 			cout<<"Carga por deporte individual con exito"<<endl;
-			
-			char nombreArchivo[30];
-			strftime(nombreArchivo, sizeof(nombreArchivo), "%Y-%m-%d-%H-%M-%S.bin", &file_competencia.fechaCreacion);
-			
-			//Reescribe competencia y guarda las medallas cargadas en los procesos anteriores en el archivo.bin con en nombre pedido
-			ofstream archivo(nombreArchivo, ios::binary | ios::out | ios::trunc);
-			if (archivo) {
-				archivo.write((char*)(&file_competencia), sizeof(file_competencia));
-				archivo.close();
-				cout << "Archivo sobrescrito exitosamente: " << nombreArchivo << endl;
-				Sleep(1000);
-				system("cls");
-			} else {
-				cout << "Error al sobrescribir el archivo." << endl;
-				Sleep(1000);
-				system("cls");
-			}
 			
 			Sleep(2000);
 			system("cls");
 		}
 			break;
 		case '2':{
-			cargaPorDeporteColectivo();
+			cargaPorDeporteColectivo(competencia, deporte_medallas, file_competencia);
 			cargaExitosa = true;
 			cout<<"Carga por deporte colectivo con exito"<<endl;
-			
-			char nombreArchivo[30];
-			strftime(nombreArchivo, sizeof(nombreArchivo), "%Y-%m-%d-%H-%M-%S.bin", &file_competencia.fechaCreacion);
-			
-			//Reescribe competencia y guarda las medallas cargadas en los procesos anteriores en el archivo.bin con en nombre pedido
-			ofstream archivo(nombreArchivo, ios::binary | ios::out | ios::trunc);
-			if (archivo) {
-				archivo.write((char*)(&file_competencia), sizeof(file_competencia));
-				archivo.close();
-				cout << "Archivo sobrescrito exitosamente: " << nombreArchivo << endl;
-				Sleep(1000);
-				system("cls");
-			} else {
-				cout << "Error al sobrescribir el archivo." << endl;
-				Sleep(1000);
-				system("cls");
-			}
 			
 			Sleep(2000);
 			system("cls");

@@ -10,9 +10,8 @@
 using namespace std;
 
 
-
 int medallasPorPaises[197][3];
-void medalleroPaises(){
+void medalleroPaises(int deporte_medallas[][3]){
 	int medallasTotales[197];
 	
 	for(int a=1;a<197;a++){//pone en cero la matriz
@@ -22,7 +21,7 @@ void medalleroPaises(){
 	}
 	
 	for(int j=0;j<3;j++){//setea los valores de las medallas que gano cada pais
-		for(int i=1;i<88;i++){
+		for(int i=0;i<87;i++){
 			if(deporte_medallas[i][j]!=0){
 				medallasPorPaises[deporte_medallas[i][j]][j]++;
 			}
@@ -64,7 +63,7 @@ void medalleroPaises(){
 	system("cls");
 }
 	
-void medalleroDeportes(){
+void medalleroDeportes(int deporte_medallas[][3]){
 	barradecarga(1000,60);
 	Sleep(400);
 	system("cls");
@@ -72,10 +71,10 @@ void medalleroDeportes(){
 	cout<<" Medallero por Deporte"<<endl;
 	cout<<"-----------------------"<<endl;
 	cout<<endl;
-	for(int i=1; i<88;i++){
+	for(int i=0;i<87;i++){
 		if(deporte_medallas[i][0]!=0){
 			cout<<"Deporte: ";
-			imprimirDeporte(i);
+			imprimirDeporte(i+1);
 			cout<<endl;
 			Sleep(100);
 			cout<<"ORO: ";
@@ -88,6 +87,7 @@ void medalleroDeportes(){
 			cout<<endl;
 			cout<<"BRONCE: ";
 			imprimirPais(deporte_medallas[i][2]);
+			cout<<endl;
 			cout<<endl;
 		}
 	}
@@ -104,7 +104,7 @@ void intercambio(int& a, int& b){
 }
 
 void medalleroTop(){
-	int top=0,medallasTotales[197],indicesPaises[197], oroPaises[197], plataPaises[197], broncePaises[197];//numero de medallas totales por pais
+	int top=0,medallasTotales[197],indicesPaises[197], oroPaises[197], plataPaises[197], broncePaises[197];//numero de medallas totales por pais, oro por pais, etc
 	int pasada=1, k, intercambios=1;
 	for(int a=1;a<197;a++){
 		medallasTotales[a]=0;
@@ -174,7 +174,7 @@ void medalleroTop(){
 	system("cls");
 }				
 
-void mostrarmedallas(){
+void mostrarmedallas(int deporte_medallas[][3]){
 	
 	char opcion;
 	do{
@@ -193,13 +193,13 @@ void mostrarmedallas(){
 			// Lógica para Medallero por País
 			cout << "Mostrando Medallero por Pais..." << endl;
 			Sleep(1000);
-			medalleroPaises();
+			medalleroPaises(deporte_medallas);
 			break;
 		case '2':
 			// Lógica para Medallero por Deporte
 			cout << "Mostrando Medallero por Deporte..." << endl;
 			Sleep(1000);
-			medalleroDeportes();
+			medalleroDeportes(deporte_medallas);
 			break;
 		case '3':
 			// Lógica para Top Medallero

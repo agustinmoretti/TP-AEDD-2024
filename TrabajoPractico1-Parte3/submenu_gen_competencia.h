@@ -1,17 +1,9 @@
 #ifndef SUBMENU_GEN_COMPETENCIA_H
 #define SUBMENU_GEN_COMPETENCIA_H
-#include<ctime>
+#include"menu.h"
 
-struct archivoCompetencia {
-	competidores competencia[87];
-	int deporte_medallas[87][3];
-	tm fechaCreacion;
-	int legajo;
-};
+bool cargarCompetencia(archivoCompetencia &file_competencia);
+bool submenuCompetencia(competidores competencia[], int deporte_medallas[][3], archivoCompetencia &file_competencia);
 
-bool cargarCompetencia();
-bool submenuCompetencia();
-
-extern archivoCompetencia file_competencia;
 
 #endif

@@ -4,18 +4,19 @@
 #include<windows.h>
 using namespace std;
 //INCLUIR ARCHIVOS CABECERA ACA 
+#include"menu.h"
 #include"deportes.h"
 #include"paises.h"
 #include"visual.h"
 
-void imprimircompetencia(int indice){
+void imprimircompetencia(int indice, competidores competencia[]){
 	cout << "Disciplina --> ";
 	imprimirDeporte(indice);
 	Sleep(100);
 	cout<<"ID Pais : ";
 	for(int j = 0; j < 16; j++){
-		if(competencia[indice].paises[j] != 0){
-			cout << competencia[indice].paises[j] << " ";
+		if(competencia[indice-1].paises[j] != 0){
+			cout << competencia[indice-1].paises[j] << " ";
 			Sleep(100);
 		}
 		
@@ -24,8 +25,8 @@ void imprimircompetencia(int indice){
 	cout << "--------------------------" << endl;
 }
 	
-void imprimircompetencias(){
-	for(int i = 1; i <= totalDeportes; i++){
+void imprimircompetencias(competidores competencia[]){
+	for(int i = 0; i < totalDeportes; i++){
 		cout << "Disciplina --> ";
 		imprimirDeporte(i); // Cambiado de i a i+1 para que los índices empiecen en 1
 		cout<<"-- "<<i<<endl;
@@ -39,11 +40,11 @@ void imprimircompetencias(){
 		cout << "--------------------------" << endl;
 	}
 }		
-void cargaAleatoria() {
+void cargaAleatoria(competidores competencia[]) {
 	srand(time(NULL));  // Inicializar la semilla del generador de números aleatorios
 	
 	// Para cada disciplina, seleccionar entre 4 y 16 países aleatoriamente
-	for (int i = 0; i <= totalDeportes; i++) {
+	for (int i = 0; i < totalDeportes; i++) {
 		// Generar aleatoriamente el número de países participantes entre 4 y 16
 		int numPaisesSeleccionados = rand() % 13 + 4;  // 4 + (0 a 12) -> rango [4, 16]
 		competencia[i].tl = numPaisesSeleccionados;
@@ -60,15 +61,22 @@ void cargaAleatoria() {
 	}
 }
 	
-bool generarCompetencia(){
+bool generarCompetencia(competidores competencia[], int deporte_medallas[][3]){
 	bool cargado = false;
 	
 	cout << "Cargando Competencia ... " << endl;
 	Sleep(1000);
-	cargaAleatoria();
+	cargaAleatoria(competencia);
+	
+	for (int i = 0; i < totalDeportes; i++) {
+		for (int j = 0; j < 3; j++) {
+			deporte_medallas[i][j] = 0;
+		}
+	}
+	
 	cargado = true;
 	
-	//imprimircompetencias();
+	//imprimircompetencias(competencia);
 	
 	return cargado;
 }
